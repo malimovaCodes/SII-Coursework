@@ -6,12 +6,38 @@
     <title>Автоматизация бизнес-плана</title>
     <link rel="stylesheet" href="src/styles/css/style.css"> 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="src/vendor/sweetalert2/sweetalert2.min.css">
+    <style>
+        .plan-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+        .plan-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            justify-content: flex-end;
+            flex-shrink: 0;
+            margin-left: 1rem;
+        }
+        .plan-tag {
+            background-color: #4a4a6a;
+            color: #e0e0e0;
+            padding: 3px 9px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+    </style>
 </head>
 <body>
 
     <header>
         <a href="#" id="logo-link" aria-label="На главную">
             <img src="src/assets/images/logo.svg" alt="Логотип конструктора бизнес-планов" id="logo" style="height: 65px">
+            <img src="src/assets/images/logo.svg" alt="Логотип Конструктора бизнес-планов" id="logo">
         </a>
         <nav>
             <a href="#" id="logout-btn" style="display: none;">Выйти</a>
@@ -19,6 +45,7 @@
     </header>
 
     <main id="app-container">
+        <!-- Экран авторизации (по умолчанию) -->
         <div id="auth-screen" class="screen active">
             <div class="form-container">
                 <h2>Авторизация</h2>
@@ -31,6 +58,7 @@
             </div>
         </div>
         
+        <!-- Экран регистрации -->
         <div id="register-screen" class="screen">
              <div class="form-container">
                 <h2>Регистрация</h2>
@@ -44,32 +72,42 @@
             </div>
         </div>
 
+        <!-- Главный экран со списком планов -->
         <div id="main-screen" class="screen">
             <h2>Мои бизнес-планы</h2>
             <button id="create-plan-btn">Создать новый бизнес-план</button>
             <div id="plan-list">
+                <!-- Сюда будут загружаться планы из БД -->
             </div>
         </div>
 
+        <!-- Мастер создания бизнес-плана -->
         <div id="wizard-screen" class="screen">
             <div class="wizard-header">
                 <div class="wizard-progress">
                     <div class="progress-step active" data-step="1"><div class="step-circle">1</div><div class="step-label"><span>Информация о проекте</span><span>Общие сведения</span></div></div>
+                    <div class="progress-step active" data-step="1"><div class="step-circle">1</div><div class="step-label"><span>Project Info</span><span>Basics</span></div></div>
                     <div class="progress-line"></div>
                     <div class="progress-step" data-step="2"><div class="step-circle">2</div><div class="step-label"><span>Характеристики</span><span>Функциональные требования</span></div></div>
+                    <div class="progress-step" data-step="2"><div class="step-circle">2</div><div class="step-label"><span>Requirements</span><span>Features</span></div></div>
                     <div class="progress-line"></div>
                     <div class="progress-step" data-step="3"><div class="step-circle">3</div><div class="step-label"><span>Стек технологий</span><span>Технологии</span></div></div>
+                    <div class="progress-step" data-step="3"><div class="step-circle">3</div><div class="step-label"><span>Tech Stack</span><span>Technology</span></div></div>
                     <div class="progress-line"></div>
                     <div class="progress-step" data-step="4"><div class="step-circle">4</div><div class="step-label"><span>Команда</span><span>Структура</span></div></div>
+                    <div class="progress-step" data-step="4"><div class="step-circle">4</div><div class="step-label"><span>Team</span><span>Structure</span></div></div>
                     <div class="progress-line"></div>
                     <div class="progress-step" data-step="5"><div class="step-circle">5</div><div class="step-label"><span>Финансы</span><span>Затраты</span></div></div>
+                    <div class="progress-step" data-step="5"><div class="step-circle">5</div><div class="step-label"><span>Financials</span><span>Budget</span></div></div>
                     <div class="progress-line"></div>
                     <div class="progress-step" data-step="6"><div class="step-circle">6</div><div class="step-label"><span>Обзор</span><span>Экспорт</span></div></div>
+                    <div class="progress-step" data-step="6"><div class="step-circle">6</div><div class="step-label"><span>Review</span><span>Export</span></div></div>
                 </div>
             </div>
             <div class="wizard-content">
                 <div id="step-1" class="wizard-step active">
                     <h3 class="step-title">Общие сведения</h3>
+                    <h3 class="step-title">Project Basics</h3>
                     <input type="text" id="project-name" placeholder="Название проекта">
                     <select id="project-type">
                         <option value="mobile">Мобильное приложение</option>
@@ -81,9 +119,12 @@
                     <textarea id="project-description" placeholder="Краткое описание проекта"></textarea>
                 </div>
 
+                <!-- Шаг 2: Функциональные требования -->
                 <div id="step-2" class="wizard-step">
                     <h3 class="step-title">Функциональные требования</h3>
+                    <h3 class="step-title">Core Features</h3>
                     <div id="features-list">
+                        <!-- Чекбоксы будут добавлены через JS -->
                     </div>
                     <div class="estimation">
                         <h4>Предварительная оценка:</h4>
@@ -93,40 +134,51 @@
                     </div>
                 </div>
 
+                <!-- Шаг 3: Технологический стек -->
                 <div id="step-3" class="wizard-step">
                     <h3 class="step-title">Технологии</h3>
+                    <h3 class="step-title">Technology Stack</h3>
                     <div class="tech-stack-grid">
                         <div class="grid gap-2">
                             <label for="tech-frontend">Фронтенд</label>
                             <select id="tech-frontend">
+                                <!-- Опции будут добавлены через JS -->
                             </select>
                         </div>
                         <div class="grid gap-2">
                             <label for="tech-backend">Бэкенд</label>
                             <select id="tech-backend">
+                                <!-- Опции будут добавлены через JS -->
                             </select>
                         </div>
                         <div class="grid gap-2">
                             <label for="tech-db">База данных</label>
                             <select id="tech-db">
+                                <!-- Опции будут добавлены через JS -->
                             </select>
                         </div>
                         <div class="grid gap-2">
                             <label for="tech-infra">Инфраструктура</label>
                             <select id="tech-infra">
+                                <!-- Опции будут добавлены через JS -->
                             </select>
                         </div>
                     </div>
                 </div>
 
+                <!-- Шаг 4: Команда -->
                 <div id="step-4" class="wizard-step">
                     <h3 class="step-title">Структура команды</h3>
+                    <h3 class="step-title">Team Structure</h3>
                     <div id="team-recommendation-list" class="space-y-4">
+                        <!-- Сюда будет добавлена рекомендуемая команда -->
                     </div>
                 </div>
 
+                <!-- Шаг 5: Финансовый план -->
                 <div id="step-5" class="wizard-step">
                     <h3 class="step-title">Финансовый план</h3>
+                    <h3 class="step-title">Financial Plan</h3>
                     <div class="space-y-6">
                         <div class="financial-item">
                             <label>Затраты на разработку (автоматически)</label>
@@ -150,8 +202,10 @@
                     </div>
                 </div>
 
+                <!-- Шаг 6: Просмотр и экспорт -->
                 <div id="step-6" class="wizard-step">
                     <h3 class="step-title">Обзор и экспорт</h3>
+                    <h3 class="step-title">Review & Export</h3>
                     <div id="final-plan-summary"></div>
                     <button id="save-plan-btn">Сохранить</button>
                     <button id="export-pdf-btn">Экспорт в PDF</button>
@@ -160,6 +214,8 @@
             <div class="wizard-navigation">
                 <button class="prev-btn" data-prev="1">Назад</button>
                 <button class="next-btn" data-next="2">Далее</button>
+                <button class="prev-btn" data-prev="1">Back</button>
+                <button class="next-btn" data-next="2">Next Step</button>
             </div>
         </div>
     </main>
@@ -167,6 +223,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.16/jspdf.plugin.autotable.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="src/vendor/jspdf/jspdf.umd.min.js"></script>
+    <script src="src/vendor/jspdf/jspdf.plugin.autotable.js"></script>
+    <script src="src/vendor/sweetalert2/sweetalert2.all.min.js"></script>
     <script type="module" src="script.js"></script>
 </body>
 </html>

@@ -38,3 +38,4 @@ export function calculateDevelopmentEstimation(selectedFeatureKeys, team, featur
 export function calculateTotalBudget(devCost = 0, marketingCost = 0, supportCost = 0) {
     return devCost + marketingCost + supportCost;
 }
+

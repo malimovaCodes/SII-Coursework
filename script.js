@@ -1,6 +1,7 @@
 import { generateAndSavePdf } from './src/utils/pdf/pdfGenerator.js';
 import { calculateDevelopmentEstimation, calculateTotalBudget } from './src/utils/calculator/costCalculator.js';
 import { updateTechOptions } from './src/utils/calculator/techCompatibility.js';
+import { categorizePlanByName } from './src/utils/categorization.js';
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -69,6 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 currentPlan.general.name = document.getElementById('project-name').value;
                 currentPlan.general.type = document.getElementById('project-type').value;
                 currentPlan.general.description = document.getElementById('project-description').value;
+                currentPlan.general.tags = categorizePlanByName(currentPlan.general.name);
                 break;
             case 3:
                 currentPlan.tech.frontend = document.getElementById('tech-frontend').value;
@@ -355,9 +357,24 @@ document.addEventListener('DOMContentLoaded', () => {
             userPlans.forEach(plan => {
                 const card = document.createElement('div');
                 card.className = 'plan-card';
+
                 const { totalCost, totalDays } = plan.plan_data.estimation || { totalCost: 0, totalDays: 0 };
+                const tags = plan.plan_data.general?.tags || [];
+
+                let tagsHTML = '';
+                if (tags.length > 0) {
+                    tagsHTML = `
+                        <div class="plan-tags">
+                            ${tags.map(tag => `<span class="plan-tag">${tag}</span>`).join('')}
+                        </div>
+                    `;
+                }
+
                 card.innerHTML = `
-                    <h3>${plan.project_name}</h3>
+                    <div class="plan-card-header">
+                        <h3>${plan.project_name}</h3>
+                        ${tagsHTML}
+                    </div>
                     <p>Бюджет: ${totalCost.toLocaleString('ru-RU')} ₽, Срок: ${totalDays} дней</p>
                     <div class="plan-card-actions">
                         <button class="export-btn" data-plan-id="${plan.id}">Экспорт в PDF</button>
